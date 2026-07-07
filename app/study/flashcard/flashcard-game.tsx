@@ -29,6 +29,14 @@ export function FlashcardGame({ words, sessionSize, tts }: Props) {
 
   const word = session[index];
 
+  // 이미지가 있으면 카드마다 랜덤으로 "이미지" 또는 "한글 뜻"만 공개.
+  // 이미지가 없으면 항상 한글 뜻.
+  const showImage = useMemo(
+    () => Boolean(word?.image_url) && Math.random() < 0.5,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [word?.id, round],
+  );
+
   async function answer(known: boolean) {
     if (!word) return;
     if (known) setCorrect((c) => c + 1);
@@ -58,36 +66,41 @@ export function FlashcardGame({ words, sessionSize, tts }: Props) {
     <div>
       <GameTop index={index} total={session.length} title="카드 뒤집기" />
 
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setFlipped((f) => !f)}
-        className="animate-pop flex min-h-[22rem] w-full flex-col items-center justify-center gap-4 rounded-3xl bg-white p-6 text-center shadow-xl active:scale-[0.99]"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") setFlipped((f) => !f);
+        }}
+        className="animate-pop flex min-h-[22rem] w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-3xl bg-white p-6 text-center shadow-xl active:scale-[0.99]"
       >
         {!flipped ? (
           <>
             <span className="text-5xl font-extrabold text-brand">{word.term}</span>
-            <SpeakButton text={word.term} settings={tts} />
+            <span onClick={(e) => e.stopPropagation()}>
+              <SpeakButton text={word.term} settings={tts} />
+            </span>
             <span className="text-sm text-foreground/40">카드를 눌러 뜻을 봐요</span>
           </>
         ) : (
-          <>
-            {word.image_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={word.image_url}
-                alt={word.term}
-                className="h-32 w-32 rounded-2xl object-cover"
-              />
-            ) : (
-              <span className="text-7xl">{word.emoji ?? "📖"}</span>
-            )}
-            <span className="text-3xl font-extrabold">{word.meaning}</span>
-            {word.example && (
-              <span className="text-sm text-foreground/60">{word.example}</span>
-            )}
-          </>
+          showImage && word.image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={word.image_url}
+              alt={word.term}
+              className="h-52 w-52 rounded-3xl object-cover"
+            />
+          ) : (
+            <>
+              <span className="text-6xl font-extrabold">{word.meaning}</span>
+              {word.example && (
+                <span className="text-sm text-foreground/60">{word.example}</span>
+              )}
+            </>
+          )
         )}
-      </button>
+      </div>
 
       {flipped && (
         <div className="mt-5 grid grid-cols-2 gap-3">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { BrandLogo } from "@/components/brand-logo";
 import { signInAction, signUpAction, type AuthState } from "./actions";
 
 const initial: AuthState = {};
@@ -13,9 +14,8 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-xl">
       <div className="mb-6 text-center">
-        <div className="text-5xl">🐣</div>
-        <h1 className="mt-2 text-2xl font-extrabold text-brand">TinyWords</h1>
-        <p className="mt-1 text-sm text-foreground/60">
+        <BrandLogo size="xl" className="mx-auto" />
+        <p className="mt-2 text-sm text-foreground/60">
           {mode === "in" ? "부모님 로그인" : "부모님 회원가입"}
         </p>
       </div>

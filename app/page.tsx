@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BrandLogo } from "@/components/brand-logo";
 import { getActiveProfile, getProfiles, getWords } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
@@ -53,7 +54,7 @@ export default async function HomePage() {
 
       {words.length === 0 ? (
         <div className="rounded-3xl bg-white p-8 text-center shadow-md">
-          <div className="text-6xl">🐣</div>
+          <BrandLogo size="lg" className="mx-auto" />
           <p className="mt-3 font-bold">아직 단어가 없어요!</p>
           <p className="mt-1 text-sm text-foreground/60">
             부모님이 단어를 등록하면 여기서 공부할 수 있어요.

@@ -47,7 +47,14 @@ cp .env.local.example .env.local
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://<프로젝트-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-public-key>
+# (선택) 단어 등록 시 AI 그림 생성 기능용. 없으면 버튼만 비활성, 앱은 정상 동작.
+OPENAI_API_KEY=sk-...
 ```
+
+> **AI 그림 생성**: 단어 등록 화면에서 단어/뜻을 바탕으로 아이용 그림을 만들어
+> 미리보고 재생성할 수 있습니다. `OPENAI_API_KEY`(서버 전용)가 있어야 동작하며,
+> `gpt-image-1` 모델을 사용합니다(호출당 비용 발생). 키는 클라이언트에 노출되지 않고
+> 서버 라우트 `/api/generate-image` 에서만 사용됩니다.
 
 ### 4. 설치 & 실행
 
