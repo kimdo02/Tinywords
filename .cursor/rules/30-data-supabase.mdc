@@ -1,0 +1,45 @@
+---
+description: Supabase 데이터/인증/보안 규칙
+globs: lib/db/**/*.ts,lib/supabase*.ts,supabase/**/*.sql,app/**/route.ts
+alwaysApply: false
+---
+
+# 데이터 & Supabase
+
+## 인증 모델
+- **부모 = Supabase Auth 사용자**(이메일 로그인). 로그인 세션이 곧 계정 동기화 단위.
+- 한 부모 계정 아래 **여러 아이 프로필**. 기기에서 프로필을 선택해 사용.
+- 모든 단어/기록은 특정 **아이 프로필**에 소속.
+
+## 핵심 테이블 (요약)
+- `profiles`: 아이 프로필 (id, owner=auth.uid(), name, avatar, created_at)
+- `words`: 단어 (id, profile_id, term, meaning, alt_meanings[], example, image_url,
+  emoji, category, difficulty, wrong_count, correct_count, streak, status,
+  last_reviewed_at, created_at)
+- `test_results`: 테스트 결과 (id, profile_id, taken_at, total, correct, wrong_word_ids)
+- `account_settings`: 부모 계정 설정 (owner=auth.uid() pk, pin_hash, tts_voice,
+  tts_rate, tts_pitch)
+
+## 단어 필드 규칙
+- `meaning` = 대표 뜻(학습·채점 기준). 뜻이 여러 개면 `alt_meanings`에 참고용으로만 저장.
+- `image_url`/`emoji`는 선택. 그림이 필요한 게임은 둘 중 하나가 있는 단어만 대상.
+- `pin_hash`는 평문 저장 금지(해시). PIN은 아이의 부모 모드 진입 차단용.
+
+## 규칙
+- **RLS(Row Level Security) 필수.** 모든 테이블에서 `auth.uid()` = 프로필 소유자만
+  자신의 데이터에 접근. 클라이언트는 anon 키만 사용.
+- 데이터 접근 함수는 `lib/db/`에 모아 재사용 (컴포넌트에 쿼리 흩뿌리지 말 것).
+- 이미지는 Supabase **Storage** 버킷에 업로드, `words.image_url`에 경로 저장.
+- 정답 시 `streak`+1, 오답 시 `wrong_count`+1 및 `streak=0`. `last_reviewed_at` 갱신.
+  `streak`가 **3**이면 `status: learning → mastered`, 오답 시 `learning` 복귀.
+  임계치(3)는 상수로 분리(`docs/PLANNING.md` 기준).
+- 마이그레이션은 `supabase/migrations/`에 SQL로 관리.
+
+```sql
+-- ✅ RLS 예시
+alter table words enable row level security;
+create policy "own words" on words
+  for all using (
+    profile_id in (select id from profiles where owner = auth.uid())
+  );
+```

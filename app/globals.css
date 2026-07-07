@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff7ed;
+  --foreground: #3f2d1e;
+  --brand: #ff7a59;
+  --brand-2: #ffb703;
+  --accent: #4cc9f0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-accent: var(--accent);
+  --font-sans: ui-rounded, "SF Pro Rounded", "Baloo 2", "Segoe UI", system-ui,
+    -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 아이 손가락에 맞춘 큰 터치 타깃 기본값 */
+button,
+a {
+  touch-action: manipulation;
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-4deg);
+  }
+  75% {
+    transform: rotate(4deg);
+  }
+}
+
+.animate-pop {
+  animation: pop-in 0.35s ease-out;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.4s ease-in-out;
+}

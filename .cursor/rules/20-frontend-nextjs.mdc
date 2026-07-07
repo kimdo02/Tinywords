@@ -1,0 +1,25 @@
+---
+description: Next.js/React 프론트엔드 컨벤션
+globs: app/**/*.tsx,components/**/*.tsx,**/*.tsx
+alwaysApply: false
+---
+
+# 프론트엔드 컨벤션 (Next.js / React)
+
+- **함수형 컴포넌트 + 훅**만 사용. 클래스 컴포넌트 금지.
+- 기본은 **서버 컴포넌트**. 상호작용/상태/브라우저 API가 필요할 때만 `"use client"`.
+  - TTS, 애니메이션, 게임 로직, `useState` 등은 클라이언트 컴포넌트에서.
+- 데이터 조회는 가능하면 서버 컴포넌트/서버 액션에서. 클라이언트에서 직접
+  Supabase 호출 시 anon 키만 사용하고 RLS로 보호(`30-data-supabase` 참고).
+- 재사용 로직은 `hooks/`의 커스텀 훅으로 분리 (예: `useTTS`, `useWords`).
+- 스타일은 Tailwind 유틸리티 클래스로. 복잡한 조합은 컴포넌트로 추출.
+- 파일명: 컴포넌트는 `PascalCase.tsx`, 훅/유틸은 `camelCase.ts`.
+
+```tsx
+// ✅ 클라이언트 상호작용 컴포넌트
+"use client";
+export function FlipCard({ word }: { word: Word }) {
+  const [flipped, setFlipped] = useState(false);
+  return <button onClick={() => setFlipped((v) => !v)}>...</button>;
+}
+```

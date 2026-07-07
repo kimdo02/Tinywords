@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9a6c"/>
+      <stop offset="1" stop-color="#ff7a59"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g transform="translate(96 120)">
+    <rect x="0" y="0" width="320" height="220" rx="40" fill="#ffffff"/>
+    <path d="M120 220 L120 276 L176 220 Z" fill="#ffffff"/>
+    <text x="160" y="150" font-family="ui-rounded, 'Baloo 2', system-ui, sans-serif"
+          font-size="120" font-weight="800" fill="#ff7a59" text-anchor="middle">Aa</text>
+  </g>
+  <text x="256" y="452" font-family="ui-rounded, 'Baloo 2', system-ui, sans-serif"
+        font-size="56" font-weight="800" fill="#ffffff" text-anchor="middle">TinyWords</text>
+</svg>
